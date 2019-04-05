@@ -15,13 +15,10 @@ ending_int = 20154841
 async def fetch(session, code):
     url = url_base + code;
     async with session.get(url, headers=headers) as resp:
-        data = []
-        print(code, end='\r')
-        print(await resp.text())
+        data = await resp.json()
         if 'code' in data:
-            print(data['name'])
             with open(file_name, 'a+') as f:
-                f.write(code)
+                f.write(code + "\n")
 
 async def fetch_codes(codes):
     async with aiohttp.ClientSession() as session:
