@@ -1,6 +1,7 @@
 import sys
 import aiohttp
 import asyncio
+import time
 from string import ascii_uppercase
 
 
@@ -9,8 +10,9 @@ headers = { 'Site-Banner':'loblaw' }
 letter_endings = [ 'KG', 'EA']
 
 file_name = 'test_codes.txt'
+step = 500
 starting_int = 20154836
-ending_int = 20154841
+ending_int = 20154936 
 
 async def fetch(session, code):
     url = url_base + code;
@@ -32,13 +34,15 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         starting_int = int(sys.argv[1])
 
-    codes = []
-    for i in range(starting_int, ending_int):
-        for ending in letter_endings:
-            code = str(i) + "_" + ending 
-            codes.append(code)
+    for i in range(starting_int, 21000000, step):
+        codes = []
+        for j in range(i, i+step):
+            for ending in letter_endings:
+                code = str(j) + "_" + ending 
+                codes.append(code)
 
-    print(f'generated {len(codes)} codes')
+        print(f'generated {len(codes)} codes from {i} to {i + 500}')
 
-    asyncio.run(fetch_codes(codes))
+        asyncio.run(fetch_codes(codes))
+        time.sleep(3)
 
