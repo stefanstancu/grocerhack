@@ -10,13 +10,16 @@ headers = { 'Site-Banner':'loblaw' }
 letter_endings = [ 'KG', 'EA']
 
 file_name = 'test_codes.txt'
-step = 500
+err_f = 'err_codes.txt'
+step = 250
 starting_int = 20154836
 ending_int = 20154936 
 
 async def fetch(session, code):
     url = url_base + code;
     async with session.get(url, headers=headers) as resp:
+        if resp.status != 200:
+            raise SystemExit("We got banned")
         data = await resp.json()
         if 'code' in data:
             with open(file_name, 'a+') as f:
