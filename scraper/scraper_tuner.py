@@ -1,5 +1,5 @@
 """ Tool for determining which conditions are fastest while still stable for the Loblaws API"""
-from scrape import fetch_codes, generate_codes
+from scrape import fetch_codes, generate_codes, sleep
 import asyncio
 import time
 
@@ -34,12 +34,6 @@ def test_bounds(upper, lower, codes):
     else:
         return lower
 
-def sleep(s):
-    t = s
-    while t > 0:
-        print(f'sleeping {t}s', end='\r')
-        time.sleep(1)
-        t -= 1
 
 if __name__=='__main__':
 

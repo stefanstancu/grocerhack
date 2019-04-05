@@ -1,5 +1,6 @@
 import sys
 import aiohttp
+import requests as r
 import asyncio
 import time
 from string import ascii_uppercase
@@ -9,12 +10,12 @@ url_base = 'https://www.loblaws.ca/api/product/'
 headers = { 'Site-Banner':'loblaw' }
 letter_endings = [ 'KG', 'EA']
 
-file_name = 'test_codes.txt'
-err_f = 'err_codes.txt'
-step = 10
-sleep_time = 0
-starting_int = 20154836
-ending_int = 20154936 
+file_name = 'codes.txt'
+
+step = 15
+sleep_time = 0.1
+starting_int = 20154876
+ending_int = 21000000 
 
 def generate_codes(starting_int, t_range):
     """ Generates #t_range codes
@@ -51,24 +52,30 @@ async def fetch_codes(codes):
         except:
             raise
 
+def sleep(s):
+    t = s
+    while t > 0:
+        print(f'sleeping {t}s', end='\r')
+        time.sleep(1)
+        t -= 1
+
+def poll_till_allowed():
+    status = 403
+    print('Waiting for ban to end...')
+    while status == 403:
+        status = r.get(url_base + str(starting_int) + '_EA').status_code
+        time.sleep(10)
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         starting_int = int(sys.argv[1])
 
+    print(f'starting with batch_size={step}')
     for i in range(starting_int, ending_int, step):
-        codes = []
-        for j in range(i, i+step):
-            for ending in letter_endings:
-                code = str(j) + "_" + ending 
-                codes.append(code)
+        codes = generate_codes(i, step)
 
-        # print(f'generated {len(codes)} codes from {i} to {i + 500}')
-
-        asyncio.run(fetch_codes(codes))
-
-        t = sleep_time
-        while t > 0:
-            print(f"Sleeping for {t}s", end='\r')
-            time.sleep(1)
-            t -= 1
-
+        try:
+            asyncio.run(fetch_codes(codes))
+        except:
+            poll_till_allowed()
+        time.sleep(1)
