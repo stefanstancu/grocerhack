@@ -6,7 +6,7 @@ The project is currently under development.
 ### Stage 1
 Building the scraper for the grocery store Loblaws.
 #### Loblaws API 403
-The scrapper uses the aiohttp package to substantially increase its throughput over the traditional serial requests. However the API will return 403 if you bombard it with too many requests. Feeling that this is not a unique problem, a tool to probe the api for its fastest stable through-put is under development.
+The scrapper uses the aiohttp package to substantially increase its throughput over the traditional serial requests. However the API will return 403 if you bombard it with too many requests. Feeling that this is not a unique problem, a tool to probe the api has been added in scraper, `scraper_tuner.py`.
 ### Stage 2
 Build a linear programming model that can choose which foods to eat in order to meet the minimum required macros, for the cheapest possible price.
 Restrictions should be placed on the macros and the weight/macro. Lentils are probably the cheapest protein, but you can't eat 1kg of them in a sitting.
